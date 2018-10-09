@@ -1,0 +1,25 @@
+version: '3'
+services:
+  proxy:
+    image: jwilder/nginx-proxy
+    container_name: cinema-nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    ports:
+      - "80:80"
+  servicea:
+    build: ./microservicea
+    image: tongzahub/microservicea
+    container_name: tongzahub-microservicea
+    depends_on:
+      - proxy
+    environment:
+      VIRTUAL_HOST: servicea.local
+  serviceb:
+    build: ./microserviceb
+    image: tongzahub/microserviceb
+    container_name: tongzahub-microserviceb
+    depends_on:
+      - proxy
+    environment:
+      VIRTUAL_HOST: serviceb.local
